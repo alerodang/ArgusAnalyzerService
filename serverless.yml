@@ -8,8 +8,7 @@ provider:
 
   apiKeys:
     - argus-analyzer-service-testing-key
-    - argus-analyzer-service-app-dev
-    - argus-analyzer-service-camera-dev
+    - argus-analyzer-service-producer-dev
 
   environment:
     APP_BUCKET: argus-security-app

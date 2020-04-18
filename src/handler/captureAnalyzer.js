@@ -35,7 +35,7 @@ module.exports.handler = async (event) => {
 
     const getFaceDataParams = {
         Key: {
-            "RekognitionFaceId": faceId,
+            "rekognitionFaceId": faceId,
         },
         TableName: collectionsTable
     };
