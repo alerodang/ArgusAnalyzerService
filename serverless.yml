@@ -1,0 +1,83 @@
+service: argus-analyzer-service
+
+provider:
+
+  name: aws
+  stage: dev
+  region: eu-west-1
+
+  apiKeys:
+    - argus-analyzer-service-testing-key
+    - argus-analyzer-service-app-dev
+    - argus-analyzer-service-camera-dev
+
+  environment:
+    APP_BUCKET: argus-security-app
+    COLLECTIONS_TABLE: argus-collections
+    PRODUCERS_TABLE: argus-producers
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - s3:*
+      Resource:
+        - ${self:custom.bucket-arn}
+        - ${self:custom.bucket-arn}/*
+    - Effect: Allow
+      Action:
+        - rekognition:*
+      Resource: "*"
+    - Effect: Allow
+      Action:
+        - dynamoDB:*
+      Resource: "*"
+
+package:
+  exclude:
+    - node_modules/**
+
+functions:
+
+  uploadCapture:
+    runtime: nodejs12.x
+    handler: src/handler/uploadCapture.handler
+    events:
+      - http:
+          path: capture
+          method: post
+
+  captureAnalyzer:
+    runtime: nodejs12.x
+    handler: src/handler/captureAnalyzer.handler
+    events:
+      - s3:
+          bucket: argus-security-app
+          event: s3:ObjectCreated:*
+          rules:
+            - prefix: captures/
+            - suffix: .jpg
+          existing: true
+
+custom:
+  bucket-arn: arn:aws:s3:::argus-security-app
+
+resources:
+  Resources:
+
+    ArgusBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: argus-security-app
+        CorsConfiguration:
+          CorsRules:
+            - AllowedOrigins:
+                - '*'
+              AllowedHeaders:
+                - '*'
+              AllowedMethods:
+                - GET
+                - PUT
+                - POST
+                - DELETE
+                - HEAD
+              MaxAge: 3000

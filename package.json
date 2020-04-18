@@ -1,0 +1,11 @@
+{
+  "name": "ArgusAnalyzerService",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "aws-sdk": "^2.658.0",
+    "serverless": "^1.67.3"
+  },
+  "dependencies": {}
+}
