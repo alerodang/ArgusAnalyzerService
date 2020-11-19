@@ -61,7 +61,6 @@ module.exports.handler = async (event) => {
     const millisecond = date.substring(12);
     const objectKey = 'captures/' + account + '/' + producerName + '/' + day + '/' + minute + '/' + millisecond + '.jpg';
 
-    console.log('DEBUG: upload image');
     await s3.upload({
         Bucket: bucket,
         Key: objectKey,
